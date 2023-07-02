@@ -1,5 +1,4 @@
 function READ(str,lineNo=0, col=0) {
-    console.log('read: ' + str+"\n");
     var result = {
         tree: [],
         error:{
@@ -34,6 +33,7 @@ function READ(str,lineNo=0, col=0) {
                 subList += str[i];
                 i+=1;
             }
+            if(cnt > 0) throwErr(lineNo,i+col,"Syntax error: expected ')'");
             var subResult = READ(subList);
             if(subResult.error.exists){
                 throwErr(lineNo,i+col,subResult.error.message);
