@@ -1,0 +1,16 @@
+{
+  "name": "lispinterpreter",
+  "version": "0.1.0",
+  "description": "lisp interpreter in javascript",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "lisp",
+    "interpreter"
+  ],
+  "author": "Gregory N. Walker",
+  "license": "ISC"
+}
