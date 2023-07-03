@@ -23,4 +23,9 @@ assert(result.tree[1].value === "3");
 assert(result.tree[1].type === PRIMITIVES.NUMBER);
 assert(result.tree[4].type === PRIMITIVES.LIST);
 
+result =READ("\"hello\"");
+assert(result.errors.length == 0);
+assert(result.tree[0].value === "hello");
+assert(result.tree[0].type === PRIMITIVES.STRING);
+
 console.log("All tests passed");

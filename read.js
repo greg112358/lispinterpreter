@@ -62,6 +62,18 @@ function READ(str,env,lineNo=0, col=0) {
                 i+=1;
             }
             addTreeNode(new Leaf(PRIMITIVES.FUNCTION, operator));
+        }
+        else if("\"" === str[i]){
+            let string = '';
+            if (++i >= str.length){
+                err(lineNo,col,"Syntax error: expected '\"'");
+            }
+            while ( i < str.length) {
+                if(str[i]==="\"") break;
+                string += str[i];
+                i+=1;
+            }
+            addTreeNode(new Leaf(PRIMITIVES.STRING, string));
         }else if (str[i].match(/\s/)) {
             // Do nothing and continue to the next character
         } else {
