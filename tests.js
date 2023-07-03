@@ -3,10 +3,16 @@ const READ = require("./read");
 const PRIMITIVES = require("./primitives");
 const Leaf = require("./leaf");
 
+var result = READ("+ 1 4 2");
+assert(result.errors.length == 0);
+
 var result = READ("(+ 1 2)");
 assert(result.errors.length == 0);
 
 result = READ("(+ 1 2");
+assert(result.errors.length > 0);
+
+result = READ("(+ 1 2))");
 assert(result.errors.length > 0);
 
 result = READ("+ 3 4 5 (* 3 4)");
