@@ -7,14 +7,6 @@ function READ(str,env,lineNo=0, col=0) {
         errors:[]
     }
 
-    function lookup(symbol,env){
-        if(env[symbol]){
-            return env[symbol];
-        }else{
-            err(lineNo,col,"Symbol "+symbol+" not found");
-        }
-    }
-
     function addTreeNode(leaf){
         result.tree.push(leaf);
     }
@@ -62,7 +54,7 @@ function READ(str,env,lineNo=0, col=0) {
             while (++i < str.length && !str[i].match(/\s/)) {
                 symbol += str[i];
             }
-            addTreeNode(lookup(symbol,env));
+            addTreeNode(new Leaf(PRIMITIVES.SYMBOL, symbol));
         }else if(["*","/","+","-", "=", ">", "<"].includes(str[i])){
             operator = str[i];
             if(i<str.length-1 && str[i+1] === "="){

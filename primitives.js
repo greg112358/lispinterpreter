@@ -1,8 +1,9 @@
 const PRIMITIVES = {
     FUNCTION: 1,
     NUMBER: 2,
-    LIST: 3,
-    KEYWORD: 4
+    STRING: 3,
+    LIST: 4,
+    SYMBOL: 5
 }
 
 module.exports = PRIMITIVES;

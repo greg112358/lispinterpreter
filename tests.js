@@ -1,7 +1,6 @@
 const assert = require('assert');
 const READ = require("./read");
 const PRIMITIVES = require("./primitives");
-const Leaf = require("./leaf");
 
 var result = READ("+ 1 4 2");
 assert(result.errors.length == 0);
