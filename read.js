@@ -4,19 +4,14 @@ const Leaf = require("./leaf");
 function READ(str,env,lineNo=0, col=0) {
     var result = {
         tree: [],
-        error:{
-            exists: false,
-            message:null,
-            line:null,
-            column:null
-        }
+        errors:[]
     }
 
     function lookup(symbol,env){
         if(env[symbol]){
             return env[symbol];
         }else{
-            throwErr(lineNo,col,"Symbol "+symbol+" not found");
+            err(lineNo,col,"Symbol "+symbol+" not found");
         }
     }
 
@@ -24,12 +19,12 @@ function READ(str,env,lineNo=0, col=0) {
         result.tree.push(leaf);
     }
 
-    function throwErr(line,col,message){
-        result.error.exists = true;
-        result.error.message = message;
-        result.error.line = line;
-        result.error.column = col;
-        return result;
+    function err(line,col,message){
+        error = {};
+        error.message = message;
+        error.line = line;
+        error.column = col;
+        result.errors.push(error);
     }
     for (let i = 0; i < str.length; i++) {
         col = i + col;
@@ -39,7 +34,7 @@ function READ(str,env,lineNo=0, col=0) {
         }else if (str[i] === '(') {
             let subList = '';
             if (++i >= str.length){
-                throwErr(lineNo,col,"Syntax error: expected ')'");
+                err(lineNo,col,"Syntax error: expected ')'");
             }
             cnt = 1;
             while ( i < str.length) {
@@ -49,16 +44,13 @@ function READ(str,env,lineNo=0, col=0) {
                 subList += str[i];
                 i+=1;
             }
-            if(cnt > 0) throwErr(lineNo,i+col,"Syntax error: expected ')'");
-            var subResult = READ(subList,env);
-            if(subResult.error.exists){
-                throwErr(lineNo,i+col,subResult.error.message);
-            }else {
-                addTreeNode(new Leaf(PRIMITIVES.LIST, subResult.tree));
-            }
+            if(cnt > 0) err(lineNo,i+col,"Syntax error: expected ')'");
+            var subResult = READ(subList,env,lineNo,col);
 
+            addTreeNode(new Leaf(PRIMITIVES.LIST, subResult.tree));
+            
         } else if (str[i] === ')') {
-            throwErr(lineNo,i,"Syntax error: unexpected ')'");
+            err(lineNo,i,"Syntax error: unexpected ')'");
         } else if (str[i].match(/[0-9]/)) {
             let num = str[i];
             while (++i < str.length && str[i].match(/[0-9]/)) {
@@ -81,7 +73,7 @@ function READ(str,env,lineNo=0, col=0) {
         }else if (str[i].match(/\s/)) {
             // Do nothing and continue to the next character
         } else {
-            throwErr(lineNo,i+col,"Syntax error: unexpected character: "+str[i]);
+            err(lineNo,i+col,"Syntax error: unexpected character: "+str[i]);
         }
     }
     return result;

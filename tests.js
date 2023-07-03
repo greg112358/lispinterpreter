@@ -4,13 +4,13 @@ const PRIMITIVES = require("./primitives");
 const Leaf = require("./leaf");
 
 var result = READ("(+ 1 2)");
-assert(result.error.exists === false);
+assert(result.errors.length == 0);
 
 result = READ("(+ 1 2");
-assert(result.error.exists === true);
+assert(result.errors.length > 0);
 
 result = READ("+ 3 4 5 (* 3 4)");
-assert(result.error.exists === false);
+assert(result.errors.length == 0);
 assert(result.tree.length === 5);
 assert(result.tree[0].value === "+");
 assert(result.tree[0].type === PRIMITIVES.FUNCTION);
