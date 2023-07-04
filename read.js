@@ -43,9 +43,9 @@ function READ(str,env,lineNo=0, col=0) {
             
         } else if (str[i] === ')') {
             err(lineNo,i,"Syntax error: unexpected ')'");
-        } else if (str[i].match(/[0-9]/)) {
+        } else if (str[i].match(/[0-9-]/)) {
             let num = str[i];
-            while (++i < str.length && str[i].match(/[0-9]/)) {
+            while (++i < str.length && str[i].match(/[0-9.]/)) {
                 num += str[i];
             }
             addTreeNode(new Leaf(PRIMITIVES.NUMBER, num));

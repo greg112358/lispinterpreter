@@ -2,6 +2,12 @@ const assert = require('assert');
 const READ = require("./read");
 const PRIMITIVES = require("./primitives");
 
+var result = READ("-3")
+assert(result.tree[0].value==="-3")
+
+var result = READ("2.43")
+assert(result.tree[0].value==="2.43")
+
 var result = READ("+ 1 4 2");
 assert(result.errors.length == 0);
 
