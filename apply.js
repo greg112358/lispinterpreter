@@ -1,0 +1,3 @@
+function APPLY(fn, args){
+
+}
