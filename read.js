@@ -1,30 +1,30 @@
-const {CONS, CAR, CDR, TYPES,Node,ConsCell} = require("./primitives");
+const {TYPES, Node, CONS} = require("./primitives");
 
-function READ(str,env,lineNo=0, col=0) {
-    var result = {
-        ast: null,
-        errors:[]
+function READ(str){
+    var result = PARSE(str);
+    if(result.errors.length > 0){
+        return {ast: null, errors: result.errors};
+    }
+    if(result.ast.length === 0){
+        return {ast: null, errors: result.errors};
+    }
+    ast = AST_TO_LINKED_LIST(result.ast);
+    return {ast: ast, errors: result.errors };
+}
+
+function AST_TO_LINKED_LIST(tokens){
+    if(tokens.length === 0){
+        return null;
+    }
+    return CONS(tokens[0],AST_TO_LINKED_LIST(tokens.slice(1)));
+}
+
+function PARSE(str,lineNo=0, col=0,errors) {
+    errors = errors || [];
+    function err(lineNo,col,msg){
+        result.errors.concat({lineNo,col,msg});
     }
 
-    var tail = null;
-    function addTreeNode(node){
-        var cell = new ConsCell(node);
-        if(result.ast == null){
-            result.ast = cell;
-            tail = cell;
-        }else{
-            tail.cdr = cell;
-            tail = cell;
-        }
-    }
-
-    function err(line,col,message){
-        error = {};
-        error.message = message;
-        error.line = line;
-        error.column = col;
-        result.errors.push(error);
-    }
     for (let i = 0; i < str.length; i++) {
         col = i + col;
         if(str[i]== "\n"){
@@ -44,9 +44,9 @@ function READ(str,env,lineNo=0, col=0) {
                 i+=1;
             }
             if(cnt > 0) err(lineNo,i+col,"Syntax error: expected ')'");
-            var subResult = READ(subList,env,lineNo,col);
-
-            addTreeNode(new Node(TYPES.LIST, subResult.ast));
+            var subResult = PARSE(subList,lineNo,col);
+            result.errors.concat(subResult.errors);
+            return CONS(new Node(TYPES.LIST, subResult), PARSE(str.slice(i+1),lineNo,i+col,errors));
             
         } else if (str[i] === ')') {
             err(lineNo,i,"Syntax error: unexpected ')'");
@@ -55,20 +55,20 @@ function READ(str,env,lineNo=0, col=0) {
             while (++i < str.length && str[i].match(/[0-9.]/)) {
                 num += str[i];
             }
-            addTreeNode(new Node(TYPES.NUMBER, num));
+            return CONS(new Node(TYPES.NUMBER, num), PARSE(str.slice(i),lineNo,i+col,errors));
         } else if (str[i].match(/[a-zA-Z_]/)) {
             let symbol = str[i];
             while (++i < str.length && !str[i].match(/\s/)) {
                 symbol += str[i];
             }
-            addTreeNode(new Node(TYPES.SYMBOL, symbol));
+            return CONS(new Node(TYPES.SYMBOL, symbol), PARSE(str.slice(i),lineNo,i+col,errors));
         }else if(["*","/","+","-", "=", ">", "<"].includes(str[i])){
             operator = str[i];
             if(i<str.length-1 && str[i+1] === "="){
                 operator += "=";
                 i+=1;
             }
-            addTreeNode(new Node(TYPES.FUNCTION, operator));
+            return CONS(new Node(TYPES.SYMBOL, operator), PARSE(str.slice(i+1),lineNo,i+col,errors))
         }
         else if("\"" === str[i]){
             let string = '';
@@ -80,14 +80,14 @@ function READ(str,env,lineNo=0, col=0) {
                 string += str[i];
                 i+=1;
             }
-            addTreeNode(new Node(TYPES.STRING, string));
+            return CONS(new Node(TYPES.STRING, string), PARSE(str.slice(i+1),lineNo,i+col,errors));
         }else if (str[i].match(/\s/)) {
             // Do nothing and continue to the next character
         } else {
             err(lineNo,i+col,"Syntax error: unexpected character: "+str[i]);
         }
     }
-    return result;
+    return null;
 }
 
 module.exports = READ;

@@ -1,5 +1,5 @@
 const TYPES = {
-    FUNCTION: 1,
+    LAMBDA: 1,
     NUMBER: 2,
     STRING: 3,
     LIST: 4,
@@ -25,11 +25,25 @@ function CONS(car,cdr){
 }
 
 function CAR(cons){
+    if(cons==null)return null;
     return cons.car;
 }
 
 function CDR(cons){
+    if(cons==null)return null;
     return cons.cdr;
+}
+
+function CAAR(cons){
+    return CAR(CAR(cons));
+}
+
+function CADR(cons){
+    return CAR(CDR(cons));
+}
+
+function CDAR(cons){
+    return CDR(CAR(cons));
 }
 
 module.exports = {
@@ -37,6 +51,8 @@ module.exports = {
     CONS,
     CAR,
     CDR,
-    Node,
-    ConsCell
+    CAAR,
+    CADR,
+    CDAR,
+    Node
 };

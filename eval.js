@@ -10,21 +10,23 @@ function EVAL(exp, env) {
         if(cdr!=null){
             return "error, expressions should start with a function";
         }
-        return car.value;
-    }else if (exp.type === PRIMITIVES.TYPES.SYMBOL) {
-        lookup = env[car.value];
-        if(lookup==null){
-            return `error, ${car.value} is not defined`;
-        }
-        return lookup;
-    } else if (exp.type === TYPES.FUNCTION) {
-        return APPLY(car, cdr,env);
+        return car;
+    } else if(car.type===TYPES.LIST){
+        return EVAL(car,env);
+    } else {
+        APPLY(car, cdr, env)
     }
-
 }
+
+
 
 function APPLY(fn, args,env) {
 
+}
+
+function EVAL_LIST(list,env){
+    list = list.car;
+    list = EVAL()
 }
 
 
