@@ -3,6 +3,9 @@ const READ = require("./read");
 const PRINT = require("./print");
 const PRIMITIVES = require("./primitives");
 
+var result = READ("+ 1 (* 2 3)");
+PRINT(result)
+
 var result = READ("-3")
 assert(result.errors.length == 0);
 
