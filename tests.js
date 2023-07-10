@@ -3,8 +3,11 @@ const READ = require("./read");
 const PRINT = require("./print");
 const PRIMITIVES = require("./primitives");
 
+var result = READ("+ 3 (* 3 44 4)")
+assert(result.errors.length==0)
+
 var result = READ("+ 1 (* 2 3)");
-PRINT(result)
+assert(result.errors.length==0)
 
 var result = READ("-3")
 assert(result.errors.length == 0);
