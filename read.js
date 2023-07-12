@@ -1,4 +1,4 @@
-const { TYPES, Node, CONS } = require("./primitives");
+const { TYPES, Node, CONS, PRIMITIVE_FUNCTIONS } = require("./primitives");
 
 function READ(str) {
     errors = [];
@@ -50,7 +50,7 @@ function PARSE(str, lineNo = 0, col = 0) {
                 symbol += str[i];
             }
             return CONS(new Node(TYPES.SYMBOL, symbol), PARSE(str.slice(i), lineNo, i + col));
-        } else if (["*", "/", "+", "-", "=", ">", "<"].includes(str[i])) {
+        } else if (PRIMITIVE_FUNCTIONS.includes(str[i])) {
             operator = str[i];
             if (i < str.length - 1 && str[i + 1] === "=") {
                 operator += "=";

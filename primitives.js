@@ -46,6 +46,8 @@ function CDAR(cons){
     return CDR(CAR(cons));
 }
 
+PRIMITIVE_FUNCTIONS = ["*", "/", "+", "-", "=", ">", "<"];
+
 module.exports = {
     TYPES,
     CONS,
@@ -54,5 +56,6 @@ module.exports = {
     CAAR,
     CADR,
     CDAR,
-    Node
+    Node,
+    PRIMITIVE_FUNCTIONS
 };
