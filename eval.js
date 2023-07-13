@@ -22,16 +22,34 @@ function APPLY(fn, args, env) {
 }
 
 function APPLY_PRIMITIVE(fn, args, env) {
-
+    var car = CAR(args);
+    var cdr = CDR(args);
+    if(car==null || cdr==null){
+        throw new Error("Invalid number of arguments");
+    }
     if (fn.value === "*") {
-        var car = CAR(args);
-        var cdr = CDR(args);
-        if (car == null && cdr == null) {
-            return car.value * cdr.value
+        var result = 1;
+        while(car!=null){
+            if(car.type!=TYPES.NUMBER){
+                throw new Error("Invalid argument type");
+            }
+            result *= car.value;
+            car = CDR(car);
         }
+        return CONS(new Node(TYPES.NUMBER, result));
 
     } else if ((fn.value === "+")) {
-
+        var result = 0;
+        while(car!=null){
+            if(car.type!=TYPES.NUMBER){
+                throw new Error("Invalid argument type");
+            }
+            result += car.value;
+            car = CDR(car);
+        }
+        return CONS(new Node(TYPES.NUMBER, result));
+    }else {
+        throw new Error("Unknown function");
     }
 }
 
